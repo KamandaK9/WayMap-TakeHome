@@ -1,140 +1,94 @@
-# Swift iOS Step Compass Assignment
+# Step Compass
 
-This repository provides a starting point for the Step Compass assignment. It includes templates and basic structure for implementing a step-based compass using CoreMotion and SwiftUI.
+This iOS app was designed following the Model-View-ViewModel (MVVM) architectural pattern, with a strong emphasis on real-time sensor integration. The app combines step counting with compass heading to calculate and visualize user movement in 2D space. It employs SwiftUI for the interface and integrates Core Motion and Core Location frameworks for precise motion tracking.
 
-## Assignment Overview
+## Why MVVM?
 
-Build a "Step Compass" feature that:
-- Tracks step counts using CMPedometer
-- Monitors device heading using CMMotionManager or CLLocationManager
-- Calculates position based on steps and heading
-- Displays information in a polished SwiftUI interface
+In the case of this app, sensor integration benefits greatly from MVVM because the ViewModel acts as an intermediary between the View and the sensor services. This means that the View doesn't need to know about the complex sensor APIs or threading requirements. It only needs to know about the ViewModel, which provides it with clean, processed data. This makes the code more modular and easier to understand, test, and maintain.
 
-## Requirements
+The ViewModel coordinates between multiple services (MotionService for sensors, PositionCalculator for math) while the View focuses purely on presentation.
 
+## Why Protocol-Oriented Design?
+
+In my app, protocols are used extensively to enable dependency injection and testing. The MotionServiceProtocol allows me to swap between real sensor implementations and mock services for testing. This architectural choice made the code more flexible and testable, while maintaining clean separation of concerns throughout the application.
+
+## Features
+
+### Real-Time Step Tracking
+The app uses CMPedometer to continuously monitor step count from the device's motion sensors. Each step is tracked in real-time and displayed to the user immediately.
+
+### Live Compass Integration  
+The app features live compass heading using CLLocationManager's magnetic heading capabilities. The compass needle rotates smoothly as the user changes direction, providing immediate visual feedback.
+
+### Trigonometric Position Calculation
+Every 10 steps, the app calculates a new position using trigonometric formulas based on the current heading direction. This creates a 2D coordinate system showing relative movement from the starting point.
+
+### Custom Compass Visualization
+A custom-built SwiftUI compass view provides an intuitive interface with smooth animations, cardinal direction markers, and a rotating needle that reflects real compass readings.
+
+### Position Reset Functionality
+Users can reset their position to the origin (0,0) at any time, allowing them to start fresh tracking from a new reference point.
+
+
+## Installation
+
+As this app relies solely on Apple's native frameworks (Core Motion, Core Location, SwiftUI), the installation process is straightforward. The app requires a physical iOS device as motion sensors are not available in the simulator.
+
+### Requirements
 - Xcode 15.0+
 - iOS 17.0+
-- Swift 5.10+
+- Physical iOS device (motion sensors required)
 
-## Getting Started
+### Setup Steps
+1. Download the project and open it in Xcode
+2. Select your physical device as the target
+3. Build and run the project 
+4. Grant motion and location permissions when prompted
 
-### Quick Setup
+## Technical Challenges & Solutions
 
-Run the provided setup script:
+### Challenge 1: Threading Complexity
+**Issue**: Sensor callbacks occur on background threads, but SwiftUI updates must happen on the main thread.
 
-```bash
-./setup.sh
-```
+**Solution**: Implemented proper `DispatchQueue.main.async` wrapping for all `@Published` property updates, ensuring thread-safe UI updates.
 
-This script will:
-1. Check if you have Homebrew installed (and install it if needed)
-2. Install XcodeGen if it's not already installed
-3. Generate the Xcode project
-4. Open the project in Xcode
+### Challenge 2: Coordinate System Mapping
+**Issue**: SwiftUI's rotation coordinate system differs from standard compass coordinates, causing incorrect needle positioning.
 
-### Manual Setup
+**Solution**: Applied proper coordinate transformations and tested multiple rotation approaches to achieve accurate compass needle alignment.
 
-If you prefer to set things up manually:
+### Challenge 3: Position Update Logic
+**Issue**: Understanding when to trigger position updates relative to step counting proved complex.
 
-1. Install XcodeGen if you don't have it already:
-   ```bash
-   brew install xcodegen
-   ```
+**Solution**: Implemented step difference tracking rather than absolute counts, ensuring position updates occur precisely every 10 steps as specified.
 
-2. Generate the Xcode project:
-   ```bash
-   xcodegen generate
-   ```
+## Key Design Decisions
 
-3. Open the generated project:
-   ```bash
-   open SwiftStarterApp.xcodeproj
-   ```
+### Sensor Integration Approach
+I chose to focus on real sensor integration over extensive mocking, prioritizing authentic iOS development challenges and demonstrating practical sensor API usage.
 
-### Using the Makefile
+### Callback vs. AsyncStream Architecture
+I implemented traditional callback patterns for sensor data flow, providing immediate functionality while maintaining the flexibility to upgrade to AsyncStream patterns in future iterations.
 
-For convenience, a Makefile is provided with common commands:
 
-```bash
-make setup            # Run the full setup script
-make generate_project # Only generate the Xcode project
-make open             # Open the Xcode project
-make clean            # Clean derived data
-make help             # Show available commands
-```
+## Next Steps (Given More Time)
 
-## Project Structure
+### Immediate Enhancements
+- **AsyncStream Integration**: Implement modern reactive patterns for sensor data streams
+- **Async Functions**: Make use of more Async functions instead of relying on callback and closures.
+- **Enhanced Error Handling**: Comprehensive sensor availability and permission management
+- **Data Persistence**: Position saving/restoration using UserDefaults
+- **Mock Service Completion**: Full testing infrastructure with simulated sensor data
 
-```
-SwiftStarterApp/
-├── App/
-│   └── StepCompassApp.swift      # App entry point
-├── Models/
-│   └── Position.swift            # Basic position model
-├── Views/
-│   ├── ContentView.swift         # Template for main content view
-│   └── Components/                
-│       └── CompassView.swift     # Basic compass component template
-├── ViewModels/
-│   └── CompassViewModel.swift    # View model template
-├── Services/
-│   └── MotionService.swift       # Template for motion services
-├── Utilities/
-│   ├── Constants.swift           # App constants
-│   └── PositionCalculator.swift  # Template for position calculations
-└── Resources/
-    ├── Assets.xcassets           # Images and colors
-    └── Preview Content/          # Preview assets
-```
+### Advanced Features
+- **HomeView Visualization**: Improve the *ContentView* file with more visualization and design elements
+- **Export Functionality**: Share Steps and bearing information feature.
+- **History Tab**: A history tab to show a user the steps they've taken and on which dates. 
 
-## Your Task
+## Lessons Learned
 
-Please refer to the **"Waymap iOS Developer: Take-Home Assignment.md"** document for the official assignment requirements. While this repository provides a minimal structure to help you get started, it's crucial to carefully follow the official assignment instructions to ensure your implementation meets all requirements.
+This project provided valuable educational material, in dealing with CMPedometer, CLLocationManager and Trigonometry calculations that I haven't had the opportunity to combine into one solution. I enjoyed extensive research and applying tutorials to come up with my personal problem-solve. Knowing that our phones provide so much sensory data to build such an application was fun! and has indeed peaked my curiosity to build more fun stuff in the future
 
-This repository provides scaffolding to implement the Step Compass assignment. You'll need to:
+---
 
-### 1. Motion Service
-
-Implement `MotionService.swift` to:
-- Stream step counts using CMPedometer
-- Stream heading data using CMMotionManager or CLLocationManager
-- Use Swift concurrency (actors or async streams)
-
-### 2. Position Calculator
-
-Implement `PositionCalculator.swift` to:
-- Calculate new positions based on steps and heading
-- Use the provided formula: `x += stepLength * cos(headingRadians)` and `y += stepLength * sin(headingRadians)`
-- Ensure calculations are testable
-
-### 3. UI Components
-
-Implement:
-- Connect and enhance `ContentView.swift` to display real-time data
-- Improve the basic `CompassView.swift` to create a proper compass visualization
-- Add appropriate animations for smooth heading changes
-
-### 4. ViewModel
-
-Implement the CompassViewModel:
-- Add appropriate @Published properties
-- Implement position tracking and updating
-- Connect motion services to update the view
-
-### 5. Tests
-
-Write tests in `PositionCalculatorTests.swift` to verify:
-- Position calculation accuracy for different headings
-- Edge cases and error handling
-
-## Note for Candidates
-
-This repository provides only the basic structure for your implementation. You are expected to:
-
-1. Fill in all `TODO` items in the code
-2. Implement the missing functionality in each component
-3. Add proper Swift concurrency patterns
-4. Create a polished UI with smooth animations
-5. Write comprehensive tests
-
-Don't just fill in the templates - feel free to enhance them, add new files, or restructure as needed to demonstrate your skills and understanding of iOS development.
+*Thank you for the opportunity to work on this challenging and educational project. The integration of motion sensors, trigonometry, and modern iOS development patterns provided significant learning value. I hope to work on more of these soon!*
