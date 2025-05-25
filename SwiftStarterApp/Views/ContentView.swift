@@ -14,13 +14,13 @@ struct ContentView: View {
                 .padding()
             
             VStack(alignment: .leading, spacing: 12) {
-                Text("Steps: 0")
+                Text("Steps: \(viewModel.stepCount)")
                     .font(.title2)
                 
-                Text("Heading: 0° N")
+                Text("Heading: \(viewModel.headingLabel)")
                     .font(.title2)
                 
-                Text("Position: (0.0 m, 0.0 m)")
+                Text("Position: (\(String(format: "%.1f", viewModel.currentPosition.x)) m, \(String(format: "%.1f", viewModel.currentPosition.y)) m)")
                     .font(.title2)
             }
             .frame(maxWidth: .infinity, alignment: .leading)
@@ -33,7 +33,7 @@ struct ContentView: View {
                 .padding()
             
             Button("Reset Position") {
-                // Add reset functionality
+                viewModel.resetPosition()
             }
             .padding()
             .buttonStyle(.bordered)
@@ -42,6 +42,12 @@ struct ContentView: View {
         }
         .padding()
         // TODO: Implement lifecycle methods to start/stop tracking
+        .onAppear {
+            viewModel.startTracking()
+        }
+        .onDisappear {
+            viewModel.stopTracking()
+        }
     }
 }
 

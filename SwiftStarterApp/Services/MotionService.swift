@@ -18,7 +18,7 @@ protocol MotionServiceProtocol {
     func startMotionTracking(
         stepUpdate: @escaping (Int) -> Void,
         headingUpdate: @escaping (Double) -> Void
-    )
+    ) 
     
     func stopMotionTracking()
     
