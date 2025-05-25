@@ -12,6 +12,15 @@ The ViewModel coordinates between multiple services (MotionService for sensors, 
 
 In my app, protocols are used extensively to enable dependency injection and testing. The MotionServiceProtocol allows me to swap between real sensor implementations and mock services for testing. This architectural choice made the code more flexible and testable, while maintaining clean separation of concerns throughout the application.
 
+## Architecture
+
+### File Organization
+- **MotionService.swift**: Handles CMPedometer and CLLocationManager integration
+- **PositionCalculator.swift**: Encapsulates trigonometric calculations  
+- **CompassViewModel.swift**: Coordinates data flow and business logic
+- **ContentView.swift**: Main SwiftUI interface
+- **CompassView.swift**: Custom compass component
+
 ## Features
 
 ### Real-Time Step Tracking
@@ -87,8 +96,11 @@ I implemented traditional callback patterns for sensor data flow, providing imme
 
 ## Lessons Learned
 
-This project provided valuable educational material, in dealing with CMPedometer, CLLocationManager and Trigonometry calculations that I haven't had the opportunity to combine into one solution. I enjoyed extensive research and applying tutorials to come up with my personal problem-solve. Knowing that our phones provide so much sensory data to build such an application was fun! and has indeed peaked my curiosity to build more fun stuff in the future
+This project provided valuable educational material, in dealing with CMPedometer, CLLocationManager and Trigonometry calculations that I haven't had the opportunity to combine into one solution. I enjoyed extensive research and applying tutorials to come up with my personal problem-solve. Knowing that our phones provide so much sensory data to build such an application was fun! and has indeed piqued my curiosity to build more fun stuff in the future
 
 ---
 
 *Thank you for the opportunity to work on this challenging and educational project. The integration of motion sensors, trigonometry, and modern iOS development patterns provided significant learning value. I hope to work on more of these soon!*
+
+### Video DEMO
+- https://drive.google.com/file/d/1ai1tb2ht3wyZVOQ4XFCdA0QIrXttjrCM/view?usp=sharing
