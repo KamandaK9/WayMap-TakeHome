@@ -25,7 +25,7 @@ struct CompassView: View {
             Circle()
                 .fill(
                     RadialGradient(
-                        colors: [Color.white, Color.gray.opacity(0.1)],
+                        colors: [Color.white, Constants.UI.Colors.secondary.opacity(0.1)],
                         center: .center,
                         startRadius: 5,
                         endRadius: 100
@@ -35,7 +35,7 @@ struct CompassView: View {
             
             ForEach(0..<4) { index in
                 Rectangle()
-                    .fill(Color.gray.opacity(0.6))
+                    .fill(Constants.UI.Colors.secondary.opacity(0.6))
                     .frame(width: 2, height: 20)
                     .offset(y: -85)
                     .rotationEffect(.degrees(Double(index) * 90))
@@ -57,14 +57,14 @@ struct CompassView: View {
             HStack {
                 Text("W")
                     .font(.system(size: 16, weight: .semibold, design: .rounded))
-                    .foregroundColor(.gray)
+                    .foregroundColor(Constants.UI.Colors.secondary)
                     .offset(x: -20)
                 
                 Spacer()
                 
                 Text("E")
                     .font(.system(size: 16, weight: .semibold, design: .rounded))
-                    .foregroundColor(.gray)
+                    .foregroundColor(Constants.UI.Colors.secondary)
                     .offset(x: 20)
             }
             .frame(width: 220)
@@ -100,13 +100,13 @@ struct CompassView: View {
                 .frame(width: 8, height: 8)
                 .offset(y: 5)
         }
-        .rotationEffect(.degrees(-heading))
+        .rotationEffect(.degrees(heading))
         .animation(Constants.UI.Animation.compass, value: heading)
         
         Circle()
             .fill(
                 RadialGradient(
-                    colors: [Color.white, Color.gray],
+                    colors: [Color.white, Constants.UI.Colors.secondary],
                     center: .center,
                     startRadius: 1,
                     endRadius: 8

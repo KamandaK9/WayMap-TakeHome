@@ -96,6 +96,48 @@ class MotionService: NSObject, MotionServiceProtocol, ObservableObject, CLLocati
 }
 
 // Example of how to create a mock for testing
-class MockMotionService {
-    // TODO: Implement a mock that can be used for testing
-} 
+class MockMotionService: MotionServiceProtocol, ObservableObject {
+    @Published private(set) var stepCount: Int = 0
+    @Published private(set) var heading: Double = 0.0
+    
+    private var stepCallback: ((Int) -> Void)?
+    private var headingCallBack: ((Double) -> Void)?
+    
+        
+    var stepStream: AsyncStream<Int> {
+        AsyncStream { _ in }
+    }
+    
+    var headingStream: AsyncStream<Double> {
+        AsyncStream { _ in }
+    }
+    
+    private var simulationTimer: Timer?
+    
+    func startMotionTracking(stepUpdate: @escaping (Int) -> Void, headingUpdate: @escaping (Double) -> Void) {
+        // Implement Mockup Tracking
+    }
+    
+    func stopMotionTracking() {
+        // Implement Mockup Stop tracking
+    }
+    
+    // MARK: - Mock Sim Methods
+    private func startSimulation() {
+        simulationTimer = Timer.scheduledTimer(withTimeInterval: 1.0, repeats: true) { _ in
+            self.simulateStepsUpdate()
+            self.simulateHeadingUpdate()
+        }
+    }
+    
+    private func simulateStepsUpdate() {
+           stepCount += Int.random(in: 1...3)
+           DispatchQueue.main.async {
+               self.stepCallback?(self.stepCount)
+           }
+       }
+       
+       private func simulateHeadingUpdate() {
+       }
+    
+}

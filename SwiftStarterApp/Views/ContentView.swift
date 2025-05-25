@@ -29,7 +29,9 @@ struct ContentView: View {
             .cornerRadius(Constants.UI.cornerRadius)
             .padding(.horizontal)
             
-            CompassView(heading: 0)
+            Spacer(minLength: 40)
+            
+            CompassView(heading: viewModel.heading)
                 .padding()
             
             Button("Reset Position") {

@@ -47,7 +47,26 @@ enum Constants {
         
         static func degreeToDirection(_ degree: Double) -> String {
             // TODO: Implement this function to convert degrees to a cardinal direction string
-            return "N" // Placeholder return
+            switch degree {
+            case 0...22, 338...360:
+                return "N"
+            case 23...67:
+                return "NE"
+            case 68...112:
+                return "E"
+            case 113...157:
+                return "SE"
+            case 158...202:
+                return "S"
+            case 203...247:
+                return "SW"
+            case 248...292:
+                return "W"
+            case 293...337:
+                return "NW"
+            default:
+                return "N"
+            }
         }
     }
 }
